@@ -1,5 +1,12 @@
 
-to get started, clone and dotnet restore.
+to get started, 
+
+git clone  https://github.com/imoldfella/test1
+
+```
+dotnet restore
+dotnet test
+```
 
 
 
