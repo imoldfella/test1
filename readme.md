@@ -1,3 +1,10 @@
+
+to get started, clone and dotnet restore.
+
+
+
+# resources
+
 dotnet new console --name test1
 dotnet add package Boa.Constrictor --version 2.0.0
 dotnet add package NUnit --version 3.13.3
