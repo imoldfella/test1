@@ -5,7 +5,7 @@ git clone  https://github.com/imoldfella/test1
 
 ```
 dotnet restore
-dotnet test
+dotnet test -l="trx;LogFileName=results.xml"
 ```
 
 

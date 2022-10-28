@@ -23,25 +23,20 @@ public class UnitTest1
     [TestMethod]
     public void test1()
     {
-        var d = new ChromeDriver();
-        var ts = (ITakesScreenshot)d;
-        var actor = new Actor(name: "andy", logger: new ConsoleLogger());
+        var actor = new ChromeActor(context!);
         try
         {
-            actor.Can(BrowseTheWeb.With(d));
             actor.AttemptsTo(Navigate.ToUrl(SearchPage.Url));
             // Get the page's title
             string title = actor.AsksFor(Title.OfPage());
-
+            actor.screenshot("test1_start");
             // Search for something
             actor.AttemptsTo(SearchDuckDuckGo.For("panda"));
 
             // Wait for results
             actor.WaitsUntil(Appearance.Of(ResultPage.ResultLinks), IsEqualTo.True());
         } catch {
-          var ss = ts.GetScreenshot();
-          ss.SaveAsFile("test1_fail");
-          context?.AddResultFile("test1_fail");
+          actor.screenshot("test1_fail");
           throw;
         }
         finally
@@ -51,7 +46,31 @@ public class UnitTest1
     }
 }
 
-public static class SearchPage
+// abstract some things into an extended actor
+public class ChromeActor : Actor {
+  public TestContext context;
+  public ITakesScreenshot ts;
+  public ChromeActor(TestContext context){
+        this.context = context;
+        var opt = new ChromeOptions();
+        opt.AddArgument("headless");
+        opt.AddArgument("window-size=1920,1200");
+        opt.AddArgument("start-maximized");
+
+        var d = new ChromeDriver(opt);
+        this.ts = (ITakesScreenshot)d;
+        var actor = new Actor(name: "andy", logger: new ConsoleLogger());  
+        this.Can(BrowseTheWeb.With(d));
+  }
+  public void screenshot(string file) {
+          var ss = ts.GetScreenshot();
+          ss.SaveAsFile(file+".jpg");
+          context?.AddResultFile(file+".jpg");
+  }
+
+}
+
+public class SearchPage
 {
     public const string Url = "https://www.duckduckgo.com/";
 
